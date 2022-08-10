@@ -10,15 +10,50 @@ app.use(cors());
 const users = [];
 
 function checksExistsUserAccount(request, response, next) {
-  // Complete aqui
+  const { username } = request.headers;
+
+  const user = users.find((user) => user.username === username);
+
+  if (!user) {
+    return response.status(404).json({ error: "username not found" });
+  }
+
+  request.user = user;
+  return next();
 }
 
 function checksCreateTodosUserAvailability(request, response, next) {
-  // Complete aqui
+  const { user } = request;
+
+  if (user.pro === false & user.todos.length >= 10) {
+    return response.status(403).json({ error: "user free exceeded limit todos" });
+  }
+
+  return next();
 }
 
 function checksTodoExists(request, response, next) {
-  // Complete aqui
+  const { username } = request.headers;
+  const { id } = request.params;
+
+  const user = users.find((user) => user.username === username);
+
+  if (!user) {
+    return response.status(404).json({ error: "username not found" });
+  } else if (user.todos.id != uuidv4) {
+    return response.status(403)
+  }
+
+  //const todo = user.todos.find((todo) => todo.id === id);
+
+  if (user.todos.id != id) {
+    return response.status(400).json({ error: "not found" });
+  }
+
+
+
+  request.user.todo = todo;
+  return next();
 }
 
 function findUserById(request, response, next) {
