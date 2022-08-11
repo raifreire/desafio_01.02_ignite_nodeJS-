@@ -38,26 +38,40 @@ function checksTodoExists(request, response, next) {
 
   const user = users.find((user) => user.username === username);
 
+
   if (!user) {
     return response.status(404).json({ error: "username not found" });
-  } else if (user.todos.id != uuidv4) {
-    return response.status(403)
   }
 
-  //const todo = user.todos.find((todo) => todo.id === id);
+  const todo = user.todos.find((todo) => todo.id === id);
 
-  if (user.todos.id != id) {
-    return response.status(400).json({ error: "not found" });
+  if (validate(todo.id) === false) {
+    console.log(validate(todo.id))
+
+    return response.status(400).json({ error: "Invalide ID" });
   }
 
+  if (!todo) {
+    return response.status(404).json({ error: "not found" });
+  }
+  console.log("passou tbm")
 
-
-  request.user.todo = todo;
+  request.todo = todo;
+  request.user = user;
   return next();
 }
 
 function findUserById(request, response, next) {
-  // Complete aqui
+  const { id } = request.params;
+
+  const user = users.find((user) => user.id === id);
+  if (!user) {
+    return response.status(404);
+  }
+
+  request.user = user;
+  return next();
+
 }
 
 app.post('/users', (request, response) => {
