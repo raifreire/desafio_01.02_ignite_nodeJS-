@@ -45,16 +45,15 @@ function checksTodoExists(request, response, next) {
 
   const todo = user.todos.find((todo) => todo.id === id);
 
-  if (validate(todo.id) === false) {
-    console.log(validate(todo.id))
+  const validId = validate(id);
 
+  if (validId === false) {
     return response.status(400).json({ error: "Invalide ID" });
   }
 
   if (!todo) {
     return response.status(404).json({ error: "not found" });
   }
-  console.log("passou tbm")
 
   request.todo = todo;
   request.user = user;
